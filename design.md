@@ -24,8 +24,8 @@ yumuşak yay (spring) animasyonları. Yalnızca açık tema var.
   --color-accent: #2756ff;        /* mavi: ikincil vurgu */
   --color-primary: #39188f;       /* koyu mor: başlıklar, kenarlık ve gölge tabanı */
   --color-body: #fafafa;          /* sayfa arka planı */
-  --color-custom-purple: #703a8f; /* yan menü gradyanı başlangıcı */
-  --color-custom-blue: #2756ff;   /* yan menü gradyanı bitişi */
+  --color-custom-purple: #703a8f; /* gradyan başlangıcı (üst şerit, avatar) */
+  --color-custom-blue: #2756ff;   /* gradyan bitişi */
   --color-onay: #4adf4f;          /* olumlu / başarılı */
   --color-ret: #ff5858;           /* olumsuz / hata / silme */
   --color-bekleme: #659bff;       /* bilgi / beklemede */
@@ -70,7 +70,6 @@ dolgu ve kenarlıkta kullanılır.
 - Kart/grup başlığı: `text-lg font-semibold`
 - Dialog başlığı: `text-2xl font-semibold text-primary`
 - Liste satırı: ana bilgi `text-sm font-bold`, yardımcı bilgi `text-xs`
-- Yan menü linki: `text-lg font-light`
 - Karşılama ekranı: "Hoş geldiniz," `text-lg font-light text-black/70`, altında
   `text-3xl font-bold text-primary` uygulama adı
 
@@ -97,24 +96,25 @@ staj-app bunları global CSS sınıfları olarak tanımlar. Aynı isimlerle taş
 - `MainCheckbox`: `size-5 rounded-md`, işaretliyken `bg-primary` ve beyaz tik.
 - Geçiş süresi: `duration-300 ease-out`.
 
-Varyantlar ek sınıfla yapılır: `MainButton !h-8 !px-3` (küçük), seçili/tehlike için
-yukarıdaki renk kalıpları.
+`<button>` için `components/Button.tsx` kullanılır (`MainButton` sınıfını uygular,
+`variant="tehlike"` kırmızı hover verir). Link gibi buton olmayan öğeler `MainButton`
+sınıfını doğrudan alır. Boyut farkları ek sınıfla: `h-10! px-3!`.
 
 
 ## Düzen
 
 ### Panel (giriş sonrası)
 
-- Solda yan menü: `bg-gradient-to-b from-custom-purple to-custom-blue`, beyaz metin,
-  `p-10 pt-16`, en fazla `18rem`, masaüstünde `sticky top-0 min-h-svh`.
-  - Üstte uygulama logosu (beyaz).
-  - Kullanıcı bloğu: Dicebear baş harf avatarı (`size-20 rounded-xl`), "Hoş geldin,"
-    `text-sm font-light`, ad `text-xl font-bold`, rol ve e-posta `text-sm`.
-  - Menü linkleri: ikon + metin, pasifken `opacity-60`, aktif ve hover'da `opacity-100`.
-  - En altta "Çıkış" (onay dialog'u ile).
-- Sağda içerik: `lg:pl-12 lg:pt-12 lg:pr-6 p-4`. Üstte geri/ileri butonları (`size-8`),
-  ardından sayfa başlığı bloğu.
-- Mobilde (`< lg`) yan menü üste gelir ve yatay düzene geçer.
+staj-app'teki gradyanlı yan menü birebir alınmadı; uygulamada tek bölüm (dersler)
+olduğu için ince bir üst çubuk yeterli. Estetik aynı, düzen farklı.
+
+- Üst çubuk: `sticky top-0`, `bg-white/80 backdrop-blur`, altında `border-primary/10`.
+  En üstte 4px'lik `from-custom-purple to-custom-blue` gradyan şerit (marka vurgusu).
+  - Solda "OBİS Katip" (`text-xl font-bold text-primary`), panel ana sayfasına link.
+  - Sağda ad + e-posta (mobilde gizli), gradyan zeminli baş harf kutusu
+    (`size-10 rounded-lg`), çıkış butonu (`Button variant="tehlike"`, mobilde sadece ikon).
+- İçerik: `max-w-6xl mx-auto`, `p-4 lg:py-10`; en üstte sayfa başlığı bloğu.
+- Avatar için dicebear gibi dış servis kullanılmaz; baş harfler yerelde üretilir.
 
 ### Liste sayfası kalıbı
 
@@ -169,11 +169,10 @@ Türkçe, kısa ve samimi: "Hoş geldin,", "Böyle bir yer yok!", "Lütfen Bekle
 
 staj-app'ten taşırken birebir kopyalanmayacak noktalar:
 
-- **Focus görünürlüğü:** `MainButton` ve yan menü linklerinde klavye focus stili yok;
-  `focus-visible:ring-2 ring-primary/30` eklenecek.
-- **Kontrast:** Gradyan üstünde `opacity-60` pasif menü metni düşük kontrastlı;
-  pasif durum `opacity-75` civarında tutulacak.
-- **Tekrarlanan inline SVG'ler** yerine Iconify ikonları kullanılacak.
-- Yan menü linkleri her biri elle yazılmış; tek bir dizi üzerinden üretilecek.
+- **Focus görünürlüğü:** staj-app'te kontrollerde klavye focus stili yok; burada
+  `focus-visible:ring-2 ring-primary/30` var.
+- **Yan menü** yerine üst çubuk (bkz. Düzen → Panel).
+- **Tekrarlanan inline SVG'ler** yerine Iconify ikonları, çevrimdışı
+  (`@iconify/react/offline` + `@iconify-icons/material-symbols`).
 - Tablo yoğun ekranlar (öğrenci × çıktı matrisi) staj-app'te yok. Bu ekranlarda
   aynı kenarlık/gölge dili korunarak sabit başlıklı, yatay kaydırılabilir tablo kullanılacak.

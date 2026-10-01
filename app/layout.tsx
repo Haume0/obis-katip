@@ -15,7 +15,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="tr" className={redHatDisplay.variable}>
+    <html
+      lang="tr"
+      className={redHatDisplay.variable}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-svh">{children}</body>
     </html>
   );
