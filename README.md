@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OBİS Katip
 
-## Getting Started
+Sınav sonuçlarından öğrenme çıktısı başarı analizi. Hoca dersini OBS Bologna'dan seçer,
+derse özel Excel şablonunu indirip doldurur ve yükler; sistem sınıfın ve her öğrencinin
+hangi öğrenme çıktısını yüzde kaç karşıladığını gösterir.
 
-First, run the development server:
+Ayrıntılı ihtiyaç ve kararlar: [plan.md](plan.md) · Tasarım dili: [design.md](design.md)
+
+## Nasıl çalışır
+
+1. **Giriş:** E-postaya gelen 6 haneli kodla (şifre yok). Hesapları yönetici açar,
+   dışarıdan kayıt kapalı.
+2. **Ders ekleme:** OBS Bologna program linki yapıştırılır, ders seçilir. Ders bilgisi,
+   değerlendirme oranları ve öğrenme çıktıları veritabanına kopyalanmaz; OBS'den istek
+   anında çekilip 1 gün cache'lenir ("OBS'den Yenile" cache'i temizler).
+3. **Sınav:** Derse özel şablon indirilir; soru tam puanları, soru–öğrenme çıktısı
+   ağırlıkları (her sorunun toplamı 1) ve öğrenci puanları girilip yüklenir.
+   Öğrenci adları saklanmaz, yalnızca okul numarası ve puanlar.
+4. **Rapor:** Öğrencinin çıktı başarısı `Σ(puan × ağırlık) / Σ(tam puan × ağırlık)`;
+   sınıf başarısı sınava girenlerin ortalaması. %50 altı "karşılanmadı".
+
+## Geliştirme
+
+Gereksinim: [Bun](https://bun.sh).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+cp .env.example .env            # BETTER_AUTH_SECRET: openssl rand -base64 32
+mkdir -p data && bun run db:migrate
+bun scripts/hoca-ekle.ts ornek@mehmetakif.edu.tr "Ad Soyad"
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Development'ta giriş kodu e-posta yerine sunucu loguna yazılır:
+`[giriş kodu] ornek@mehmetakif.edu.tr: 123456`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Komut | |
+|---|---|
+| `bun dev` | Geliştirme sunucusu |
+| `bun test` | Excel okuma ve hesaplama testleri |
+| `bun run lint` | Biome (lint + format kontrolü) |
+| `bun run db:generate` | Şema değişince migration üretir |
+| `bun run db:migrate` | Migration'ları uygular |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy
 
-## Learn More
+SQLite dosyası kalıcı disk ister; Vercel gibi serverless ortamlar uygun değil, tek bir
+Node/Bun sunucusu (VPS, okul sunucusu) hedeflenir.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+bun install
+mkdir -p data && bun run db:migrate
+bun run build
+bun run start                   # varsayılan port 3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`.env`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `BETTER_AUTH_URL` uygulamanın dışarıdan erişilen adresiyle birebir aynı olmalı
+  (ör. `https://obis.ornek.edu.tr`); farklıysa giriş istekleri "Invalid origin" ile reddedilir.
+- `BETTER_AUTH_SECRET` production için yeni üretilmeli.
+- `SMTP_*` giriş kodu e-postası için zorunlu. `SMTP_SECURE=true` 465 portu (SSL),
+  `SMTP_STARTTLS=true` 587 portu içindir; ikisi de `false` ise bağlantı şifresiz kurulur.
 
-## Deploy on Vercel
+Hoca hesabı açmak için sunucuda: `bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Yapı
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/giris              e-posta kodu ile giriş
+app/panel              dersler, ders ekleme, ders sayfası, sınav raporu
+app/panel/actions.ts   server action'lar (her biri oturumu ve sahipliği doğrular)
+lib/obs.ts             OBS Bologna sayfalarını okuma + cache
+lib/sinav-excel.ts     sınav Excel'i okuma ve derse özel şablon üretme
+lib/hesap.ts           öğrenme çıktısı başarı hesabı, %50 eşik
+db/schema.ts           Drizzle şeması (auth, hoca_ders, sinav)
+tests/                 hesap ve Excel testleri (anonim örnek dosya ile)
+```

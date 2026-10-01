@@ -109,25 +109,33 @@ Hoca Excel'de her soru için hangi öğrenme çıktısını hangi oranla ölçt�
   uygun değil; tek bir Node sunucusu (VPS veya okul sunucusu) hedefleniyor.
 
 
-## Hedeflenen kullanım akışı
+## Kullanım akışı (uygulandı)
 
-1. Hoca, OBS ders linkini yapıştırır. Ders bilgileri ve öğrenme çıktıları otomatik gelir.
-2. Sınavı (vize/final) seçer ve soruları ile her sorunun hangi çıktıyı ölçtüğünü girer.
-3. Bu ders ve sınava özel Excel şablonunu indirir, notları doldurup yükler.
-4. Sınıf özetini, çıktı bazlı grafikleri ve öğrenci bazlı tabloyu görür.
-5. Raporu PDF veya Excel olarak dışa aktarır.
+1. Hoca e-postasına gelen kodla giriş yapar (hesabı yönetici açar).
+2. OBS program linkini yapıştırır, dersini seçer. Ders bilgileri, değerlendirme oranları
+   ve öğrenme çıktıları OBS'den gelir.
+3. Ders sayfasından derse özel Excel şablonunu indirir; soru tam puanlarını,
+   soru–çıktı ağırlıklarını ve puanları doldurup yükler.
+4. Sınıf özetini, çıktı bazlı başarı çubuklarını ve öğrenci × çıktı tablosunu görür.
 
 
-## Çalışma adımları
+## Durum
 
-1. Mevcut sistemi incelemek: Excel şablonu, ekranlar ve hesaplama sonuçları.
-   Kodlara (GitHub/Drive) erişim istenecek.
-2. Hesaplama kurallarını Kemal Hoca ile netleştirmek (aşağıdaki sorular).
-3. Arayüz taslağı (UI) hazırlayıp hocaya göstermek.
-4. OBS Bologna sayfasından veri çekme.
-5. Excel şablonu ve yükleme, hesaplama ve rapor ekranları.
-6. Mevcut kodu güvenlik açısından incelemek; sonra düzeltmeye mi yoksa sıfırdan
-   yazmaya mı karar vermek.
+Yapıldı:
+- E-posta kodu ile giriş, kapalı kayıt, hoca ekleme scripti
+- OBS'den istek anında ders bilgisi (1 gün cache, elle yenileme); iki çıktı tablosu
+  biçimi de okunuyor, programdaki 33 dersle kontrol edildi
+- Derse özel şablon, Excel okuma ve doğrulama (hücre adresli hatalar), sınav raporu
+- Ders/sınav silme onaylı; panel hata ve yükleniyor ekranları
+- Testler: Excel okuma, hesaplama, şablon (anonim örnek dosya ile)
+- Production modunda deneme (yönlendirmeler, kapalı kayıt, kod isteği sınırı)
+
+Sırada (hocanın cevaplarına bağlı):
+- Vize + final birleşik rapor (oranlar OBS'den)
+- Raporu PDF / Excel olarak dışa aktarma
+- Program çıktısı raporu (ders–program çıktısı matrisi OBS'de var)
+- Formülün Kutbay Hoca'nın sistemiyle karşılaştırılması
+- SMTP ile gerçek e-posta gönderiminin denenmesi; deploy
 
 
 ## Verilen kararlar (geçici varsayılanlar, hocayla doğrulanacak)

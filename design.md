@@ -155,6 +155,21 @@ Sol üstte geri butonu (`buttonVariants({ size: "icon-lg" })`).
 - **404:** giriş kartı ölçüsünde kart, mor ikon dairesi, büyük "404", "Böyle bir yer yok!".
 
 
+### Rapor (sınav analizi)
+
+- Üstte üç özet kartı: sınava giren, sınıf ortalaması, karşılanan çıktı
+  (`text-3xl font-semibold tabular-nums`).
+- Öğrenme çıktısı başarısı: her Öç için yatay çubuk (0–100, `h-3 rounded-full`, zemin
+  `bg-muted`), %50 eşikte ince dikey çizgi, yanında ikon + yüzde + "karşılandı /
+  karşılanmadı" etiketi. Altında lejant. Ölçülmeyen çıktı "Bu sınavda ölçülmedi".
+- Durum renkleri yalnızca grafik ve tablo zemininde: `karsilandi` #16883a,
+  `karsilanmadi` #e0434a (staj-app onay/ret beyaz zeminde çubuk için çok açık;
+  bu çift 3:1 kontrast ve renk körlüğü kontrolünü geçiyor). Metin her zaman tema metin
+  renginde; renk tek başına anlam taşımaz.
+- Öğrenci × çıktı tablosu: shadcn `Table`, eşik altı hücre `bg-karsilanmadi/10` +
+  ekran okuyucu için "(karşılanmadı)". Mobilde tablo kendi içinde yatay kayar.
+
+
 ## Animasyon
 
 - Tümü `motion` ile spring: dialog/overlay `stiffness 400, damping 40`; sayfa girişi
