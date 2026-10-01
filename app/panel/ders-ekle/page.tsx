@@ -1,7 +1,9 @@
+import { Icon } from "@iconify/react/offline";
+import openInNew from "@iconify-icons/material-symbols/open-in-new-rounded";
 import { and, eq } from "drizzle-orm";
 import Form from "next/form";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,11 +39,24 @@ export default async function DersEklePage({
 
   return (
     <>
-      <h1 className="text-3xl font-semibold text-primary">Ders Ekle</h1>
-      <p className="text-muted-foreground">
-        OBS Bologna'daki program sayfanızın linkini yapıştırın, ardından
-        dersinizi seçin.
-      </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold text-primary">Ders Ekle</h1>
+          <p className="text-muted-foreground">
+            OBS Bologna'da programınızı açın, adres çubuğundaki linki kopyalayıp
+            aşağıya yapıştırın, ardından dersinizi seçin.
+          </p>
+        </div>
+        <a
+          href="https://obs.mehmetakif.edu.tr/oibs/bologna/index.aspx?lang=tr"
+          target="_blank"
+          rel="noreferrer"
+          className={buttonVariants({ size: "lg" })}
+        >
+          <Icon icon={openInNew} className="size-5" />
+          OBS Bologna'yı Aç
+        </a>
+      </div>
 
       <Form action="/panel/ders-ekle" className="mt-6 flex flex-col gap-2">
         <Label htmlFor="link">OBS program linki</Label>
