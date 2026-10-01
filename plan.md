@@ -130,16 +130,26 @@ Hoca Excel'de her soru için hangi öğrenme çıktısını hangi oranla ölçt�
    yazmaya mı karar vermek.
 
 
+## Verilen kararlar (geçici varsayılanlar, hocayla doğrulanacak)
+
+- Formül: ağırlıklı, `Σ(puan × ağırlık) / Σ(tam puan × ağırlık)`; sınıf başarısı sınava giren
+  öğrencilerin ortalaması (`lib/hesap.ts`). Örnek dosyada Excel'in kendi sınıf ortalamasıyla
+  (60,93) birebir tutuyor.
+- "Karşılandı" eşiği %50 (`KARSILANMA_ESIGI`).
+- Sınava girmeyen (tüm puanları boş) öğrenci ortalamaya katılmaz; girip boş bıraktığı soru 0.
+- Vize/final oranları OBS'deki değerlendirme oranlarından okunuyor (ders sayfasında gösteriliyor).
+- Öğrenci verisi: okul numarası + puanlar saklanır, ad saklanmaz.
+
+
 ## Kemal Hoca'ya sorulacaklar
 
-- Ağırlıklı formül (yukarıda) mevcut sistemin kullandığıyla aynı mı?
+- Ağırlıklı formül mevcut sistemin kullandığıyla aynı mı? (Sitedeki sonuçlarla karşılaştırılacak.)
 - Harf notu neden elle giriliyor? Sistem hesaplamalı mı, yoksa sadece gösterilmeli mi?
 - 25 soru / 10 çıktı sınırı yeterli mi?
 - Sınıf başarısında öğrenci ortalaması mı, toplam puan oranı mı kullanılmalı?
-- "Kazanıldı" eşiği kaç olmalı? Ders veya bölüm bazında değişiyor mu?
-- Vize/final ağırlıkları dersin Bologna'daki değerlendirme oranlarından mı alınmalı?
+- "Karşılandı" eşiği %50 doğru mu? Ders veya bölüm bazında değişiyor mu?
+- Vize + final birleşik rapor isteniyor mu? Oranlar OBS'den mi alınmalı?
 - Program çıktısı raporu da isteniyor mu, yoksa ders öğrenme çıktıları yeterli mi?
-- Sınava girmeyen öğrenciler hesaba katılacak mı?
 - Sistemi kimler kullanacak (tek hoca, bölüm, tüm MYO)? Giriş/yetki nasıl olmalı?
-- Öğrenci verileri sunucuda saklanacak mı, yoksa sadece analiz edilip silinecek mi (KVKK)?
+- OBS ders id'leri müfredat yılına bağlı; yeni müfredatta dersin yeniden eklenmesi sorun mu?
 - Mevcut sistemin kodlarına erişebilir miyiz?

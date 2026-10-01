@@ -89,13 +89,14 @@ export async function obsDersDetayi(dersId: string) {
     .querySelectorAll("td")
     .map(metin);
 
+  // Bazı derslerde çıktılar tek tabloda (#grdOgrenmeCiktilari), bazılarında Bilgi/Beceri/
+  // Yetkinlik başlıklı ayrı tablolarda (#grdOgrenmeCiktilari1, 2, …). Sıra no OBS'den gelir.
   const ogrenmeCiktilari = sayfa
-    .querySelectorAll("#grdOgrenmeCiktilari tr")
-    .slice(1)
-    .map((satir) => {
-      const [sira, aciklama] = satir.querySelectorAll("td").map(metin);
-      return { sira: Number(sira), aciklama };
-    });
+    .querySelectorAll('table[id^="grdOgrenmeCiktilari"] tr')
+    .map((satir) => satir.querySelectorAll("td").map(metin))
+    .filter((hucreler) => hucreler.length >= 2 && /^\d+$/.test(hucreler[0]))
+    .map(([sira, aciklama]) => ({ sira: Number(sira), aciklama }))
+    .sort((a, b) => a.sira - b.sira);
 
   const degerlendirme = sayfa
     .querySelectorAll('[id^="grd_degerlendirme_lblCalismaTip_"]')

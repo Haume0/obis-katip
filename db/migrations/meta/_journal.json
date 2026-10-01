@@ -15,6 +15,13 @@
       "when": 1790870443981,
       "tag": "0001_mute_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790872911111,
+      "tag": "0002_steep_solo",
+      "breakpoints": true
     }
   ]
 }

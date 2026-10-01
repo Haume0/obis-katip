@@ -73,6 +73,12 @@
   --color-ret: #ff5858;
   --color-bekleme: #659bff;
   --color-hic: #a790f0;
+
+  /* Rapor grafikleri için öğrenme çıktısı durum renkleri. onay/ret beyaz zeminde çubuk
+     olarak çok açık (onay 1,7:1); bunlar 3:1 kontrastı ve renk körlüğü kontrolünü geçiyor.
+     Renk tek başına kullanılmaz, yanında ikon + etiket + yüzde olur. */
+  --color-karsilandi: #16883a;
+  --color-karsilanmadi: #e0434a;
 }
 
 @layer base {

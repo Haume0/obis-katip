@@ -9,7 +9,8 @@
     "lint": "biome check",
     "format": "biome format --write",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "test": "bun test"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
@@ -20,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "drizzle-orm": "^0.45.3",
+    "exceljs": "^4.4.0",
     "input-otp": "^1.5.0",
     "lucide-react": "^1.49.0",
     "motion": "^13.5.0",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
     "@tailwindcss/postcss": "^4",
+    "@types/bun": "^1.4.2",
     "@types/node": "^20",
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",

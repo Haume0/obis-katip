@@ -1,4 +1,5 @@
 import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import type { Ogrenci, Soru } from "@/lib/sinav-excel";
 
 // Better Auth tabloları. Alanlar better-auth'un beklediği şemayla birebir aynı olmalı.
 
@@ -74,3 +75,21 @@ export const hocaDers = sqliteTable(
   },
   (t) => [unique().on(t.userId, t.obsDersId)],
 );
+
+// Yüklenen sınav. Soru-çıktı matrisi ve puanlar JSON tutulur; sınav her zaman bütün olarak
+// okunup hesaplanıyor, soru veya öğrenci bazında SQL sorgusu yok.
+// Öğrenci adı saklanmaz (KVKK); yalnızca okul numarası ve puanlar.
+export const sinav = sqliteTable("sinav", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  hocaDersId: integer("hoca_ders_id")
+    .notNull()
+    .references(() => hocaDers.id, { onDelete: "cascade" }),
+  tur: text("tur").notNull(),
+  donem: text("donem").notNull(),
+  sube: text("sube").notNull(),
+  sorular: text("sorular", { mode: "json" }).$type<Soru[]>().notNull(),
+  ogrenciler: text("ogrenciler", { mode: "json" }).$type<Ogrenci[]>().notNull(),
+  yuklenme: integer("yuklenme", { mode: "timestamp_ms" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
