@@ -44,7 +44,10 @@ Hoca, sonuçları web'de görüntüler ve raporlar.
 
 1. **OBS Bologna sayfası (kamuya açık):** ders adı, kodu, AKTS, dersin öğrenme
    çıktıları, program çıktıları ve ders–program çıktısı ilişki matrisi. Giriş gerektirmez;
-   HTML'den okunur (scraping).
+   HTML'den okunur (scraping). Veritabanına aktarılmaz; gerektiğinde OBS'den çekilir ve
+   cache'lenir. Sayfalar: `progCourses.aspx` (ders listesi),
+   `progCourseDetails.aspx?curCourse=<id>` (ders bilgisi, değerlendirme oranları, öğrenme
+   çıktıları), `progLearnOutcomes.aspx`, `progCourseMatrix.aspx`.
 2. **Hocanın yüklediği Excel:** öğrenci listesi, soru bazlı puanlar ve her sorunun hangi
    öğrenme çıktısını ölçtüğü (soru–çıktı eşlemesi hoca tarafından Excel'de girilir).
 

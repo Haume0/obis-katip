@@ -28,7 +28,7 @@ export default async function PanelLayout({ children }: LayoutProps<"/panel">) {
             <span className="block truncate text-sm font-semibold">
               {user.name}
             </span>
-            <span className="block truncate text-xs text-black/60">
+            <span className="block truncate text-xs text-muted-foreground">
               {user.email}
             </span>
           </span>

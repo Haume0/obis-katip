@@ -1,13 +1,22 @@
 "use client";
 
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Button from "@/components/Button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
 export default function GirisFormu() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [kodGonderildi, setKodGonderildi] = useState(false);
   const [hata, setHata] = useState("");
   const [bekliyor, setBekliyor] = useState(false);
@@ -38,16 +47,14 @@ export default function GirisFormu() {
     event.preventDefault();
     setHata("");
     setBekliyor(true);
-    const { error } = await authClient.signIn.emailOtp({
-      email,
-      otp: String(new FormData(event.currentTarget).get("otp")),
-    });
+    const { error } = await authClient.signIn.emailOtp({ email, otp });
     if (error) {
       setHata(
         error.status === 429
           ? "Çok fazla deneme yapıldı, biraz bekleyip tekrar deneyin."
           : "Kod hatalı veya süresi dolmuş.",
       );
+      setOtp("");
       setBekliyor(false);
       return;
     }
@@ -57,20 +64,18 @@ export default function GirisFormu() {
   if (!kodGonderildi) {
     return (
       <form onSubmit={kodGonder} className="flex flex-col gap-3">
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          E-posta
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="MainInput font-normal"
-          />
-        </label>
+        <Label htmlFor="email">E-posta</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         {hata && (
-          <p role="alert" className="text-sm text-ret">
+          <p role="alert" className="text-sm text-destructive">
             {hata}
           </p>
         )}
@@ -82,42 +87,48 @@ export default function GirisFormu() {
   }
 
   return (
-    <form onSubmit={girisYap} className="flex flex-col gap-3">
+    <form onSubmit={girisYap} className="flex flex-col items-center gap-3">
       {/* Kayıtlı olmayan adrese kod gitmez ama mesaj aynı kalır; kayıtlı e-postalar sızmasın. */}
-      <p className="text-center text-sm text-black/70">
-        <span className="font-semibold">{email}</span> kayıtlıysa bu adrese 6
-        haneli bir giriş kodu gönderildi.
+      <p className="text-center text-sm text-muted-foreground">
+        <span className="font-semibold text-foreground">{email}</span>{" "}
+        kayıtlıysa bu adrese 6 haneli bir giriş kodu gönderildi.
       </p>
-      <label className="flex flex-col gap-1 text-sm font-medium">
-        Giriş kodu
-        <input
-          name="otp"
-          required
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          pattern="[0-9]{6}"
-          maxLength={6}
-          className="MainInput text-center font-normal tracking-[0.5em]"
-        />
-      </label>
+      <InputOTP
+        maxLength={6}
+        pattern={REGEXP_ONLY_DIGITS}
+        value={otp}
+        onChange={setOtp}
+        autoFocus
+        aria-label="Giriş kodu"
+      >
+        <InputOTPGroup>
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <InputOTPSlot key={i} index={i} />
+          ))}
+        </InputOTPGroup>
+      </InputOTP>
       {hata && (
-        <p role="alert" className="text-sm text-ret">
+        <p role="alert" className="text-sm text-destructive">
           {hata}
         </p>
       )}
-      <Button type="submit" disabled={bekliyor} className="mt-2">
+      <Button
+        type="submit"
+        disabled={bekliyor || otp.length < 6}
+        className="mt-2 w-full"
+      >
         {bekliyor ? "Giriş yapılıyor..." : "Giriş Yap"}
       </Button>
-      <button
-        type="button"
+      <Button
+        variant="link"
         onClick={() => {
           setKodGonderildi(false);
+          setOtp("");
           setHata("");
         }}
-        className="cursor-pointer text-sm font-medium text-prime underline hover:text-primary"
       >
         Farklı e-posta kullan
-      </button>
+      </Button>
     </form>
   );
 }

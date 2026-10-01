@@ -9,13 +9,16 @@ export default async function PanelPage() {
     <>
       <h1 className="text-3xl font-semibold text-primary">Dersler</h1>
       <p>OBS'den eklediğiniz dersler ve sınav analizleri.</p>
-      <p className="text-black/60">
+      <p className="text-muted-foreground">
         Bugün, {new Date().toLocaleDateString("tr-TR")}
       </p>
       <div className="mt-8 flex flex-col items-center p-8 text-center">
-        <Icon icon={menuBook} className="mb-3 text-6xl text-gray-400" />
-        <h2 className="text-lg font-medium text-gray-600">Henüz ders yok</h2>
-        <p className="mt-2 text-sm text-gray-500">
+        <Icon
+          icon={menuBook}
+          className="mb-3 text-6xl text-muted-foreground/60"
+        />
+        <h2 className="text-lg font-medium">Henüz ders yok</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
           OBS bağlantısıyla ders ekleme yakında burada olacak.
         </p>
       </div>

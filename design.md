@@ -10,10 +10,17 @@ yumuşak yay (spring) animasyonları. Yalnızca açık tema var.
 
 ## Teknoloji
 
-- Tailwind CSS v4 (`@theme` ile token tanımı, `@plugin '@tailwindcss/typography'`)
-- İkonlar: `@iconify/react` + Material Symbols (`material-symbols:*-rounded` varyantları)
+- Tailwind CSS v4 + **shadcn/ui** (base-nova, Base UI). Bileşenler `components/ui/` altında;
+  shadcn ile eklenir (`bunx shadcn@latest add <ad>`), görünüm için doğrudan düzenlenir.
+  Bu klasör Biome lint dışında, shadcn güncellemeleri kolay uygulansın diye.
+- Tema: `app/globals.css` içindeki shadcn token'ları (`--primary`, `--border`, `--accent` …)
+  staj-app renklerine eşlenmiştir. Yalnızca açık tema; `dark:` sınıfları `.dark` olmadan
+  devreye girmez.
+- İkonlar: uygulama kodunda Iconify Material Symbols, çevrimdışı
+  (`@iconify/react/offline` + `@iconify-icons/material-symbols`). shadcn bileşenlerinin
+  kendi içindeki ikonlar lucide.
 - Animasyon: `motion` (`motion/react`)
-- Font: Red Hat Display (Google Fonts, 300–900). Next.js'te `next/font/google` ile yüklenir.
+- Font: Red Hat Display (`next/font/google`, latin + latin-ext).
 
 
 ## Renkler
@@ -21,7 +28,6 @@ yumuşak yay (spring) animasyonları. Yalnızca açık tema var.
 ```css
 @theme {
   --color-prime: #9236ff;         /* canlı mor: vurgu, seçili durum, rozet, link */
-  --color-accent: #2756ff;        /* mavi: ikincil vurgu */
   --color-primary: #39188f;       /* koyu mor: başlıklar, kenarlık ve gölge tabanı */
   --color-body: #fafafa;          /* sayfa arka planı */
   --color-custom-purple: #703a8f; /* gradyan başlangıcı (üst şerit, avatar) */
@@ -85,20 +91,18 @@ dolgu ve kenarlıkta kullanılır.
 
 ## Ortak kontroller
 
-staj-app bunları global CSS sınıfları olarak tanımlar. Aynı isimlerle taşınacak
-(`globals.css` içinde `@apply`):
+staj-app'teki `MainButton`, `MainInput` … global sınıfları yerine shadcn bileşenleri
+kullanılır; görünümleri staj-app'e benzetildi:
 
-- `MainButton`: beyaz, `h-12 rounded-lg px-6`, ince mor kenarlık ve gölge. Hover'da
-  `-translate-y-0.5`, mor tonlu arka plan ve daha belirgin gölge. Active'de geri iner.
-- `MainInput` / `MainTextarea`: beyaz, `h-12 rounded-lg px-3`. Focus'ta
-  `border-primary/40 bg-primary/4 ring-2 ring-primary/20`.
-- `MainSelect` / `MainDetail`: `MainInput` görünümü + sağda chevron ikonu (data-URI SVG).
-- `MainCheckbox`: `size-5 rounded-md`, işaretliyken `bg-primary` ve beyaz tik.
-- Geçiş süresi: `duration-300 ease-out`.
-
-`<button>` için `components/Button.tsx` kullanılır (`MainButton` sınıfını uygular,
-`variant="tehlike"` kırmızı hover verir). Link gibi buton olmayan öğeler `MainButton`
-sınıfını doğrudan alır. Boyut farkları ek sınıfla: `h-10! px-3!`.
+- `Button`: `default` varyantı staj-app `MainButton` görünümü (beyaz, `h-12 px-6`, ince mor
+  kenarlık, hover'da `-translate-y-0.5` ve mor gölge). `destructive` aynı görünüm + hover'da
+  kırmızı. `solid` dolu mor (gerektiğinde ana eylem için). Boyutlar: `default` h-12,
+  `lg` h-10, `icon-lg` size-10. Link için `buttonVariants()` sınıfı kullanılır.
+- `Input`: beyaz, `h-12 px-3`, focus'ta hafif mor zemin ve halka.
+- `InputOTP`: `size-12` beyaz kutular (giriş kodu).
+- `Card`: `rounded-2xl`, `ring-primary/10`, `shadow-primary/5`. Giriş/karşılama kartı ek
+  olarak `shadow-2xl shadow-primary/20` alır.
+- Metin renkleri: ikincil metin `text-muted-foreground`, hata `text-destructive`.
 
 
 ## Düzen
@@ -112,7 +116,7 @@ olduğu için ince bir üst çubuk yeterli. Estetik aynı, düzen farklı.
   En üstte 4px'lik `from-custom-purple to-custom-blue` gradyan şerit (marka vurgusu).
   - Solda "OBİS Katip" (`text-xl font-bold text-primary`), panel ana sayfasına link.
   - Sağda ad + e-posta (mobilde gizli), gradyan zeminli baş harf kutusu
-    (`size-10 rounded-lg`), çıkış butonu (`Button variant="tehlike"`, mobilde sadece ikon).
+    (`size-10 rounded-lg`), çıkış butonu (`Button variant="destructive" size="lg"`, mobilde sadece ikon).
 - İçerik: `max-w-6xl mx-auto`, `p-4 lg:py-10`; en üstte sayfa başlığı bloğu.
 - Avatar için dicebear gibi dış servis kullanılmaz; baş harfler yerelde üretilir.
 
@@ -122,14 +126,14 @@ olduğu için ince bir üst çubuk yeterli. Estetik aynı, düzen farklı.
 2. Filtre çubuğu (`bg-hic/24`): sağa yaslı `MainSelect` ve arama `MainInput`
 3. Açılır gruplar (`Details`): başlık + sayaç rozeti, içinde beyaz satır kartları
    (`rounded-lg outline-1 outline-black/20 p-3`, masaüstünde grid kolonlar)
-4. Satır sonunda eylem butonu (`MainButton`, ikon + metin, ör. "İncele")
+4. Satır sonunda eylem butonu (`Button`, ikon + metin, ör. "İncele")
 
 ### Giriş / karşılama ekranı
 
 `bg-body` üzerinde ortalanmış tek kart: `w-[30rem] bg-white p-10 rounded-2xl border
 border-primary/10 shadow-2xl shadow-primary/20`. Logo, karşılama metni, alt alta tam
-genişlik `MainButton`'lar ve altta "Yardım" linki (`text-prime underline`).
-Sol üstte geri butonu (`MainButton !size-10`).
+genişlik `Button`'lar ve altta "Yardım" linki (`text-prime underline`).
+Sol üstte geri butonu (`buttonVariants({ size: "icon-lg" })`).
 
 
 ## Bileşenler
