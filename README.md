@@ -47,12 +47,32 @@ Development'ta giriş kodu e-posta yerine sunucu loguna yazılır:
 SQLite dosyası kalıcı disk ister; Vercel gibi serverless ortamlar uygun değil, tek bir
 Node/Bun sunucusu (VPS, okul sunucusu) hedeflenir.
 
+**Docker (önerilen):**
+
+```bash
+docker build -t obis-katip .
+docker run -d --name obis-katip -p 3000:3000 \
+  --env-file .env -v obis-data:/app/data obis-katip
+docker exec obis-katip bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"
+```
+
+Container her açılışta migration'ları uygular. Veritabanı `obis-data` volume'ünde kalır;
+volume bağlanmazsa container silinince veri gider. `.env` image'a girmez
+(`.dockerignore`), çalışırken `--env-file` ile verilir.
+
+**Docker'sız:**
+
 ```bash
 bun install
 mkdir -p data && bun run db:migrate
 bun run build
-bun run start                   # varsayılan port 3000
+cp -r .next/static .next/standalone/.next/
+bun .next/standalone/server.js    # PORT ile port seçilir, varsayılan 3000
 ```
+
+`server.js` çalışma klasörünü `.next/standalone`'a çevirir; bu yüzden Docker'sız kurulumda
+`DATABASE_URL` mutlak yol olmalı (ör. `file:/srv/obis-katip/data/obis.db`), yoksa uygulama
+boş bir veritabanı açar.
 
 `.env`:
 
@@ -62,7 +82,7 @@ bun run start                   # varsayılan port 3000
 - `SMTP_*` giriş kodu e-postası için zorunlu. `SMTP_SECURE=true` 465 portu (SSL),
   `SMTP_STARTTLS=true` 587 portu içindir; ikisi de `false` ise bağlantı şifresiz kurulur.
 
-Hoca hesabı açmak için sunucuda: `bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"`.
+Hoca hesabı (Docker'sız): `bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"`.
 
 ## Yapı
 
