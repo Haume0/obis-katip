@@ -13,6 +13,9 @@ import { oturumuDogrula } from "@/lib/auth";
 import { birimIdBul, obsProgramDersleri } from "@/lib/obs";
 import { dersEkle } from "../actions";
 
+const OBS_PROGRAM_LISTESI =
+  "https://obs.mehmetakif.edu.tr/oibs/bologna/unitSelection.aspx";
+
 export default async function DersEklePage({
   searchParams,
 }: PageProps<"/panel/ders-ekle">) {
@@ -39,22 +42,37 @@ export default async function DersEklePage({
 
   return (
     <>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0 flex-1">
           <h1 className="text-3xl font-semibold text-primary">Ders Ekle</h1>
           <p className="text-muted-foreground">
-            OBS Bologna'da programınızı açın, adres çubuğundaki linki kopyalayıp
-            aşağıya yapıştırın, ardından dersinizi seçin.
+            OBS Bologna'da programınıza tıklayın, adres çubuğundaki linki
+            kopyalayıp aşağıya yapıştırın, ardından dersinizi seçin. Lisans
+            programları için{" "}
+            <a
+              href={`${OBS_PROGRAM_LISTESI}?type=lis&lang=tr`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-prime underline hover:text-primary"
+            >
+              buraya
+            </a>{" "}
+            bakın.
           </p>
         </div>
+        {/* Program listesi sayfası; programa tıklanınca açılan adres (index.aspx?…curSunit=…)
+            bu formun beklediği link. Bologna ana sayfası program listesini göstermiyor. */}
         <a
-          href="https://obs.mehmetakif.edu.tr/oibs/bologna/index.aspx?lang=tr"
+          href={`${OBS_PROGRAM_LISTESI}?type=myo&lang=tr`}
           target="_blank"
           rel="noreferrer"
-          className={buttonVariants({ size: "lg" })}
+          className={buttonVariants({
+            size: "lg",
+            className: "self-start sm:self-auto",
+          })}
         >
           <Icon icon={openInNew} className="size-5" />
-          OBS Bologna'yı Aç
+          OBS'de Programını Bul
         </a>
       </div>
 
