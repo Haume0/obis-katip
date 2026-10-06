@@ -93,7 +93,7 @@ export default async function DersPage({
           <p className="flex-1 text-muted-foreground">
             1. Bu derse özel şablonu indirin; ders kodu ve OBS'deki öğrenme
             çıktıları hazır gelir. 2. Soru–çıktı ağırlıklarını ve puanları
-            doldurup yükleyin. Öğrenci adları saklanmaz.
+            doldurup yükleyin.
           </p>
           {/* Link değil düz <a>: route handler dosya döndürüyor, prefetch edilmemeli. */}
           <a

@@ -16,7 +16,7 @@ Ayrıntılı ihtiyaç ve kararlar: [plan.md](plan.md) · Tasarım dili: [design.
    anında çekilip 1 gün cache'lenir ("OBS'den Yenile" cache'i temizler).
 3. **Sınav:** Derse özel şablon indirilir; soru tam puanları, soru–öğrenme çıktısı
    ağırlıkları (her sorunun toplamı 1) ve öğrenci puanları girilip yüklenir.
-   Öğrenci adları saklanmaz, yalnızca okul numarası ve puanlar.
+   Öğrencinin okul numarası, adı ve puanları saklanır.
 4. **Rapor:** Öğrencinin çıktı başarısı `Σ(puan × ağırlık) / Σ(tam puan × ağırlık)`;
    sınıf başarısı sınava girenlerin ortalaması. %50 altı "karşılanmadı".
 

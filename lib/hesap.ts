@@ -20,10 +20,11 @@ export function ciktiBasarilari(sorular: Soru[], ogrenciler: Ogrenci[]) {
     ]),
   );
 
-  const ogrenciSonuclari = ogrenciler.map(({ no, puanlar }) => {
-    if (!puanlar) return { no, toplam: null, ciktilar: null };
+  const ogrenciSonuclari = ogrenciler.map(({ no, ad, puanlar }) => {
+    if (!puanlar) return { no, ad, toplam: null, ciktilar: null };
     return {
       no,
+      ad,
       toplam: puanlar.reduce<number>((t, p) => t + (p ?? 0), 0),
       ciktilar: Object.fromEntries(
         ciktilar.map((c) => {

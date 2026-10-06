@@ -175,6 +175,7 @@ export default async function SinavRaporuPage({
           <TableHeader>
             <TableRow>
               <TableHead className="px-4">Okul No</TableHead>
+              <TableHead>Ad Soyad</TableHead>
               <TableHead className="text-right">Puan</TableHead>
               {b.ciktilar.map((c) => (
                 <TableHead key={c} className="text-right">
@@ -187,6 +188,7 @@ export default async function SinavRaporuPage({
             {b.ogrenciler.map((o) => (
               <TableRow key={o.no}>
                 <TableCell className="px-4 tabular-nums">{o.no}</TableCell>
+                <TableCell>{o.ad}</TableCell>
                 {o.ciktilar ? (
                   <>
                     <TableCell className="text-right tabular-nums">

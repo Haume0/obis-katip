@@ -78,7 +78,7 @@ export const hocaDers = sqliteTable(
 
 // Yüklenen sınav. Soru-çıktı matrisi ve puanlar JSON tutulur; sınav her zaman bütün olarak
 // okunup hesaplanıyor, soru veya öğrenci bazında SQL sorgusu yok.
-// Öğrenci adı saklanmaz (KVKK); yalnızca okul numarası ve puanlar.
+// Öğrenci bilgisi olarak okul numarası, ad ve puanlar tutulur.
 export const sinav = sqliteTable("sinav", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   hocaDersId: integer("hoca_ders_id")

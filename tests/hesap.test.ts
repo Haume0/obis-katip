@@ -164,8 +164,8 @@ describe("sinavSablonuOlustur", () => {
       { sira: 2, tamPuan: 60, agirliklar: { 1: 0.5, 2: 0.5 } },
     ]);
     expect(sonuc.sinav.ogrenciler).toEqual([
-      { no: "1001", puanlar: [30, 60] },
-      { no: "1002", puanlar: null },
+      { no: "1001", ad: "Ad Soyad", puanlar: [30, 60] },
+      { no: "1002", ad: "", puanlar: null },
     ]);
     const b = ciktiBasarilari(sonuc.sinav.sorular, sonuc.sinav.ogrenciler);
     // Öç1: (30×1 + 60×0,5) / (40×1 + 60×0,5) = 60/70

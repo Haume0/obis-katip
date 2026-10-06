@@ -3,7 +3,7 @@ import ExcelJS from "exceljs";
 // Kutbay Hoca'nın mevcut şablonu (bkz. plan.md "Mevcut Excel şablonu"). Hücre yerleri sabit:
 // A2 ders kodu, A4 dönem, A6 sınav türü, A8 şube; C..AA sütunları Soru 1..25;
 // 5..14. satırlar Öç1..Öç10 ağırlık matrisi; 16. satır tam puanlar; 18. satırdan itibaren
-// A okul no, C..AA soru puanları. Öğrenci adı (B) bilerek okunmaz, saklanmaz.
+// A okul no, B öğrenci adı, C..AA soru puanları.
 // Okuyucu ve derse özel şablon üretici aynı yerleşimi kullanır.
 const ILK_SORU_SUTUNU = 3; // C
 const SORU_SAYISI = 25;
@@ -22,6 +22,8 @@ export type Soru = {
 
 export type Ogrenci = {
   no: string;
+  // Ad saklanmaya sonradan başlandı; önceki yüklemelerin kayıtlarında alan yok.
+  ad?: string;
   // Sınava girmeyen öğrencinin tüm puanları boş; null olarak tutulur ve ortalamaya girmez.
   puanlar: (number | null)[] | null;
 };
@@ -155,6 +157,7 @@ export async function sinavExceliOku(
     });
     ogrenciler.push({
       no,
+      ad: yazi(hucre(satir, 2)),
       puanlar: puanlar.every((p) => p === null) ? null : puanlar,
     });
   }
@@ -321,7 +324,7 @@ export async function sinavSablonuOlustur(ders: {
     });
   cs.addRow({
     aciklama:
-      "Sınav sayfasında her soru için Öç satırlarına ağırlık girin (ör. 0,25 ve 0,75); her sorunun ağırlık toplamı 1 olmalı. Öğrenci adları sisteme kaydedilmez.",
+      "Sınav sayfasında her soru için Öç satırlarına ağırlık girin (ör. 0,25 ve 0,75); her sorunun ağırlık toplamı 1 olmalı.",
   });
 
   return kitap.xlsx.writeBuffer();
