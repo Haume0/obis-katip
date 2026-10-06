@@ -29,7 +29,7 @@ export default async function GirisPage() {
           Akademisyen Girişi
         </h1>
         <p className="mb-4 text-center text-lg font-light text-muted-foreground">
-          Kayıtlı e-posta adresinize gelen kod ile giriş yapabilirsiniz.
+          Yöneticiden aldığınız e-posta ve şifre ile giriş yapabilirsiniz.
         </p>
         <GirisFormu />
       </Card>

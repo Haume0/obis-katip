@@ -8,8 +8,9 @@ Ayrıntılı ihtiyaç ve kararlar: [plan.md](plan.md) · Tasarım dili: [design.
 
 ## Nasıl çalışır
 
-1. **Giriş:** E-postaya gelen 6 haneli kodla (şifre yok). Hesapları yönetici açar,
-   dışarıdan kayıt kapalı.
+1. **Giriş:** E-posta ve şifreyle. Hesapları ve şifreleri yönetici belirler; dışarıdan
+   kayıt kapalı, hoca şifresini değiştiremez. Okulun mail sistemi kod e-postalarını
+   engellediği için e-posta ile giriş veya şifre sıfırlama yok.
 2. **Ders ekleme:** OBS Bologna program linki yapıştırılır, ders seçilir. Ders bilgisi,
    değerlendirme oranları ve öğrenme çıktıları veritabanına kopyalanmaz; OBS'den istek
    anında çekilip 1 gün cache'lenir ("OBS'den Yenile" cache'i temizler).
@@ -27,12 +28,9 @@ Gereksinim: [Bun](https://bun.sh).
 bun install
 cp .env.example .env            # BETTER_AUTH_SECRET: openssl rand -base64 32
 mkdir -p data && bun run db:migrate
-bun scripts/hoca-ekle.ts ornek@mehmetakif.edu.tr "Ad Soyad"
+bun scripts/hoca-ekle.ts ornek@mehmetakif.edu.tr "Ad Soyad" <şifre>
 bun dev
 ```
-
-Development'ta giriş kodu e-posta yerine sunucu loguna yazılır:
-`[giriş kodu] ornek@mehmetakif.edu.tr: 123456`.
 
 | Komut | |
 |---|---|
@@ -53,7 +51,7 @@ Node/Bun sunucusu (VPS, okul sunucusu) hedeflenir.
 docker build -t obis-katip .
 docker run -d --name obis-katip -p 3000:3000 \
   --env-file .env -v obis-data:/app/data obis-katip
-docker exec obis-katip bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"
+docker exec obis-katip bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>" <şifre>
 ```
 
 Container her açılışta migration'ları uygular. Veritabanı `obis-data` volume'ünde kalır;
@@ -79,15 +77,15 @@ boş bir veritabanı açar.
 - `BETTER_AUTH_URL` uygulamanın dışarıdan erişilen adresiyle birebir aynı olmalı
   (ör. `https://obis.ornek.edu.tr`); farklıysa giriş istekleri "Invalid origin" ile reddedilir.
 - `BETTER_AUTH_SECRET` production için yeni üretilmeli.
-- `SMTP_*` giriş kodu e-postası için zorunlu. `SMTP_SECURE=true` 465 portu (SSL),
-  `SMTP_STARTTLS=true` 587 portu içindir; ikisi de `false` ise bağlantı şifresiz kurulur.
 
-Hoca hesabı (Docker'sız): `bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>"`.
+Hoca hesabı (Docker'sız): `bun scripts/hoca-ekle.ts <e-posta> "<Ad Soyad>" <şifre>`.
+Kayıtlı e-posta verilirse şifre yenisiyle değiştirilir (unutulan şifre, eski kodla giriş
+hesapları).
 
 ## Yapı
 
 ```
-app/giris              e-posta kodu ile giriş
+app/giris              e-posta ve şifre ile giriş
 app/panel              dersler, ders ekleme, ders sayfası, sınav raporu
 app/panel/actions.ts   server action'lar (her biri oturumu ve sahipliği doğrular)
 lib/obs.ts             OBS Bologna sayfalarını okuma + cache
